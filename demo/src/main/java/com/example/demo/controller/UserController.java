@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
@@ -15,22 +15,42 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/get")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
-    }
-
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/username/{username}")
+    public List<User> getUsersByUsername(@PathVariable String username) {
+        return userService.getUsersByUsername(username);
+    }
+
+    @PostMapping("/post")
+    public User createUser(@RequestBody User user) {
+        return userService.createUser(user);
+    }
+
+    @PostMapping("/postmultiple")
+    public List<User> createMultipleUsers(@RequestBody List<User> users) {
+        return userService.createMultipleUsers(users);
+    }
+
+    @PutMapping("/put/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+        return userService.updateUser(id, user);
+    }
+
+    @PatchMapping("/update-username/{id}")
+    public int updateUsername(@PathVariable Long id, @RequestParam String username) {
+        return userService.updateUsername(id, username);
+    }
+
+    @DeleteMapping("/delete/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }

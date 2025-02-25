@@ -1,28 +1,19 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Getter
-@Setter
-@Table(name = "buses")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Bus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
-    private String busName;
-
-    @Column(nullable = false)
-    private String source;
-
-    @Column(nullable = false)
-    private String destination;
-
-    @Column(nullable = false)
+   
+    private String busNumber;
+    private String busType;
     private int capacity;
 }

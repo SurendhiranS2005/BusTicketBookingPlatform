@@ -1,4 +1,3 @@
-
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
@@ -8,16 +7,18 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "admins")
-public class Admin {
-    
+@Table(name = "tickets")
+public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    @Column(nullable = false)
+    private String title;
 
     @Column(nullable = false)
-    private String password;
+    private String description;
+
+    @Column(nullable = false) // Ensure seatNumber is required
+    private String seatNumber;
 }
