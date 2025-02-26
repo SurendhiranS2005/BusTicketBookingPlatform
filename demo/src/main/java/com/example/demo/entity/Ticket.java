@@ -19,6 +19,6 @@ public class Ticket {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false) // Ensure seatNumber is required
+    @Column(nullable = false) 
     private String seatNumber;
 }
