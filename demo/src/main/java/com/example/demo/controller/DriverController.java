@@ -2,43 +2,66 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Driver;
 import com.example.demo.service.DriverService;
-import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/drivers")
+@RequestMapping("/api/drivers")
+@Tag(name = "Driver Management", description = "Operations related to driver management")
 public class DriverController {
     private final DriverService driverService;
 
     public DriverController(DriverService driverService) {
         this.driverService = driverService;
     }
-    @PostMapping("/post")
-    public Driver createDriver(@RequestBody Driver driver) {
-        return driverService.createDriver(driver);
+
+    @GetMapping
+    @Operation(summary = "Get all drivers", description = "Retrieve a list of all drivers")
+    public ResponseEntity<List<Driver>> getAllDrivers() {
+        return ResponseEntity.ok(driverService.getAllDrivers());
     }
-    @PostMapping("/postmutliple")
-    public List<Driver> createMultipleDrivers(@RequestBody List<Driver> drivers) {
-        return driverService.createMultipleDrivers(drivers);
+
+    @GetMapping("/paged")
+    @Operation(summary = "Get all drivers (paged)", description = "Retrieve a paginated list of all drivers")
+    public ResponseEntity<Page<Driver>> getAllDrivers(Pageable pageable) {
+        return ResponseEntity.ok(driverService.getAllDrivers(pageable));
     }
-    @GetMapping("/get")
-    public List<Driver> getAllDrivers() {
-        return driverService.getAllDrivers();
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get driver by ID", description = "Retrieve a driver by their ID")
+    public ResponseEntity<Driver> getDriverById(@PathVariable Long id) {
+        return ResponseEntity.ok(driverService.getDriverById(id));
     }
-    @GetMapping("/get/{id}")
-    public Driver getDriverById(@PathVariable Long id) {
-        return driverService.getDriverById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver not found with ID " + id));
+
+    @GetMapping("/license/{licenseNumber}")
+    @Operation(summary = "Get driver by license number", description = "Retrieve a driver by their license number")
+    public ResponseEntity<Driver> getDriverByLicenseNumber(@PathVariable String licenseNumber) {
+        return ResponseEntity.ok(driverService.getDriverByLicenseNumber(licenseNumber));
     }
-    @PutMapping("/put/{id}")
-    public Driver updateDriver(@PathVariable Long id, @RequestBody Driver driver) {
-        return driverService.updateDriver(id, driver);
+
+    @PostMapping
+    @Operation(summary = "Create a new driver", description = "Add a new driver to the system")
+    public ResponseEntity<Driver> createDriver(@RequestBody Driver driver) {
+        return new ResponseEntity<>(driverService.createDriver(driver), HttpStatus.CREATED);
     }
-    @DeleteMapping("/delete/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDriver(@PathVariable Long id) {
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update driver", description = "Update an existing driver's information")
+    public ResponseEntity<Driver> updateDriver(@PathVariable Long id, @RequestBody Driver driver) {
+        return ResponseEntity.ok(driverService.updateDriver(id, driver));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete driver", description = "Remove a driver from the system")
+    public ResponseEntity<Void> deleteDriver(@PathVariable Long id) {
         driverService.deleteDriver(id);
+        return ResponseEntity.noContent().build();
     }
 }
